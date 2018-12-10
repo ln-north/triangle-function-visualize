@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>三角関数のビジュアライズ</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            background: white;
+        }
+        .outer {
+            transform-origin: center center;
+            width: 80%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+        }
+        .outer:before {
+            content: "";
+            display: block;
+            padding-top: 100%;
+        }
+        .unit-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 1px solid #999;
+        }
+        .x-axis {
+            position: absolute;
+            top: 50%;
+            left: -200%;
+            transform: translate(-50%, -50%);
+            width: 2000%;
+            height: 1px;  
+            background: black;
+        }
+        .y-axis {
+            position: absolute;
+            top: -200%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            height: 2000%;
+            width: 1px;  
+            background: black;
+        }
+        .point {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            transform: translate(-8px, -8px);
+            background-color: red;
+            border-radius: 50%;
+        }
+        .hoge {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, .5);
+            border-radius: 50%;
+        }
+        .point-x {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            transform: translate(-8px, -8px);
+            background-color: blue;
+            border-radius: 50%;
+        }
+        .point-y {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            transform: translate(-8px, -8px);
+            background-color: lime;
+            border-radius: 50%;
+        }
+        .line-p-x {
+            position: absolute;
+            transform: translate(-1px, -1px);
+            width: 2px;
+            background-color: #999;
+        }
+        .line-p-y {
+            position: absolute;
+            transform: translate(-1px, -1px);
+            height: 2px;
+            background-color: #999;
+        }
+        #angle {
+            width: calc(100vw - 80px);
+            position: fixed;
+            bottom: 20px;
+            left: calc(100vw / 2 - (100vw - 80px) / 2)
+        }
+        .point-x-label {
+            position: absolute;
+            top: 100%;
+            left: 100%;
+            font-family: serif;
+            font-size: 14px;
+        }
+        .point-y-label {
+            position: absolute;
+            top: 100%;
+            left: 100%;
+            font-family: serif;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="unit-circle"></div>
+        <!-- <div class="x-axis-2over1"></div>
+        <div class="y-axis-2over1"></div>
+        <div class="x-axis-2oversqrt2"></div>
+        <div class="y-axis-2oversqrt2"></div>
+        <div class="x-axis-2oversqrt3"></div>
+        <div class="y-axis-2oversqrt3"></div>
+        <div class="x-axis-minus2over1"></div>
+        <div class="y-axis-minus2over1"></div>
+        <div class="x-axis-minus2oversqrt2"></div>
+        <div class="y-axis-minus2oversqrt2"></div>
+        <div class="x-axis-minus2oversqrt3"></div>
+        <div class="y-axis-minus2oversqrt3"></div> -->
+        <div class="x-axis"></div>
+        <div class="y-axis"></div>
+        <div class="line-p-x" id="line-p-x"></div>
+        <div class="line-p-y" id="line-p-y"></div>
+        <div class="point-x" id="point-x">
+            <span class="point-x-label">cos</span>
+        </div>
+        <div class="point-y" id="point-y">
+            <span class="point-y-label">sin</span>
+        </div>
+        <div class="point" id="point"></div>
+    </div>
+    <input type="range" step="0.001" min="0" max="4" value="0.25" id="angle"> 
+    <script>
+        var angle = document.getElementById('angle');
+        var rad = Math.PI * angle.value;
+        var linePX = document.getElementById('line-p-x');
+        var linePY = document.getElementById('line-p-y');
+
+        var point = document.getElementById('point');
+        var pointX = document.getElementById('point-x');
+        var pointY = document.getElementById('point-y');
+
+        var draw = function(arg) {
+            point.style.left = 50 * Math.cos(arg) + 50 + '%';
+            point.style.top = -50 * Math.sin(arg) + 50 + '%';
+
+            pointX.style.left = 50 * Math.cos(arg) + 50 + '%';
+            pointX.style.top = 50 + '%';
+            pointY.style.top = -50 * Math.sin(arg) + 50 + '%';
+            pointY.style.left = 50 + '%';
+
+            linePX.style.height = Math.abs(-50 * Math.sin(arg)) + '%';
+            linePX.style.top = Math.sin(arg) > 0 ? -50 * Math.sin(arg) + 50 + '%' : '50%';
+            linePX.style.left = 50 * Math.cos(arg) + 50 + '%';
+            linePY.style.width = Math.abs(-50 * Math.cos(arg)) + '%';
+            linePY.style.left = Math.cos(arg) > 0 ? '50%' : 50 * Math.cos(arg) + 50 + '%';
+            linePY.style.top = -50 * Math.sin(arg) + 50 + '%';
+        }
+
+        angle.addEventListener('input', function(){
+            rad = Math.PI * angle.value;
+            draw(rad);
+        });
+
+        draw(rad);
+    </script>
+</body>
+</html>
